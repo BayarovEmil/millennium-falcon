@@ -20,7 +20,7 @@ services:
       - app-network
 
   backend:
-    image: ghcr.io/bayarovemil/millennium-falcon:latest
+    build: .
     container_name: myapp
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/mydb
