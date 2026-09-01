@@ -4,12 +4,6 @@ on:
   push:
     branches: [main]
 
-env:
-  SERVER_HOST: 169.58.242.148
-  SERVER_USER: emil
-  SERVER_PORT: 22
-  DEPLOY_PATH: /home/emil/millenium-arc
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -34,16 +28,17 @@ jobs:
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ env.SERVER_HOST }}
-          username: ${{ env.SERVER_USER }}
-          port: ${{ env.SERVER_PORT }}
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          port: ${{ secrets.SERVER_PORT }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd ${{ env.DEPLOY_PATH }}
+            cd ${{ secrets.DEPLOY_PATH }}
             git pull
             docker compose up -d --build
             docker image prune -f
